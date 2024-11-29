@@ -16,19 +16,31 @@ export class HomePage {
   constructor() {}
 
   generarPDF() {
-    const doc = new jsPDF();
+    // Create a new jsPDF instance
+    const doc = new jsPDF({
+      orientation: 'portrait',
+      unit: 'mm',
+      format: 'a4',
+      compress: true
+    });
 
-    // Título del PDF
+    // Use the local date
+    const now = new Date();
+    const formattedDate = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
+
+    // Title of the PDF
     doc.setFontSize(18);
+    doc.addFont('Helvetica', 'Helvetica', 'normal');
     doc.text('Reporte del Formulario', 10, 10);
 
-    // Datos del formulario
+    // Form data
     doc.setFontSize(12);
-    doc.text(`Nombre: ${this.formData.nombre}`, 10, 30);
-    doc.text(`Edad: ${this.formData.edad}`, 10, 40);
-    doc.text(`Género: ${this.formData.genero}`, 10, 50);
+    doc.text(`Nombre: ${this.formData.nombre || 'No especificado'}`, 10, 30);
+    doc.text(`Edad: ${this.formData.edad || 'No especificada'}`, 10, 40);
+    doc.text(`Género: ${this.formData.genero || 'No especificado'}`, 10, 50);
+    doc.text(`Fecha: ${formattedDate}`, 10, 60);
 
-    // Guardar el archivo
+    // Save the PDF
     doc.save('reporte.pdf');
   }
 }
